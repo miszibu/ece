@@ -1,20 +1,12 @@
 **ECE自我总结模拟题**
 
-集群1：(10.128.190.86:9200/10.128.190.87:9200/10.128.190.88:9200)  
+集群1：
 
-​       kibana (10.128.190.86:5601)
+集群2：
 
-集群2：(10.128.190.84:9200)
+集群3：
 
-​       kibana (10.128.190.84:5601)
-
-集群3：(10.128.190.83:9200)
-
-​       kibana (10.128.190.83:5601)
-
-集群4: (10.128.190.82:9200)
-
-​       kibana (10.128.190.82:5601)
+集群4: 
 
 ​       
 
@@ -25,10 +17,9 @@
 # **Task1
 
 * index books1和books2都是3个主分片，1个副本分片。
-* 要求books1只能分配在node1(10.128.190.86)上。
-* 要求books2所有分片分配在node2(10.128.190.87)，node3(10.128.190.88)上。
-* 集群1 (10.128.190.86:9200/10.128.190.87:9200/10.128.190.88:9200)
-* kibana (10.128.190.86:5601)
+* 要求books1只能分配在node1上。
+* 要求books2所有分片分配在node2，node3上。
+* 集群1 
 
 答案：books1
 
@@ -67,9 +58,9 @@ PUT books2/_settings
 # **Task2
 
 * index books3是3个主分片，1个副本分片
-* 要求索引强制有意识的分片分配到 不同的rack id上，分别node1(10.128.190.86)的rack是r1，node2(10.128.190.87)和node3(10.128.190.88)的rack是r2.
-* 集群1 (10.128.190.86:9200/10.128.190.87:9200/10.128.190.88:9200)
-* kibana (10.128.190.86:5601)
+* 要求索引强制有意识的分片分配到 不同的rack id上，分别node1的rack是r1，node2和node3的rack是r2.
+* 集群1 
+
 
 答案如下：
 
@@ -114,7 +105,7 @@ GET _cat/shards/books3
 
 * 准备task3的索引，导入6条不同的文档数据
 * reindex task3的索引到task3_new后
-* 集群2 (10.128.190.84:9200), kibana (10.128.190.84:5601)
+* 集群2 
 
 答案如下：
 
@@ -188,8 +179,7 @@ POST task3_new/_search
 
 task4的索引中有两条分别是waynes和wayne's的数据，通过将my_index reindex到task4_new后，使用waynes或wayne's的查询，能返回同样数量的文档和评分。
 
-* 集群2 (10.128.190.84:9200)
-* kibana (10.128.190.84:5601)
+
 
 答案：设置task4_new的setting和mapping
 
@@ -305,8 +295,7 @@ GET task4_nn/_analyze
 
 另外要求，通过reindex将task5这个索引，应用于刚刚定义好的pipeline，从而生成一个新的索引task5_new。
 
-* 集群2 (10.128.190.84:9200)
-* kibana (10.128.190.84:5601)
+
 
 答案如下：
 
@@ -373,8 +362,7 @@ POST _ingest/pipeline/pip_1/_simulate
 
 现有的索引task6中，每个文档都有value01、value02、value03 这三个字段。为这个索引中的所有文档，新增一个字段，名称为newadd，这个字段的值，是value01、value02、value03这三个字段的和(拼接)。
 
-* 集群2 (10.128.190.84:9200)
-* kibana (10.128.190.84:5601)
+
 
 答案如下：
 
@@ -425,8 +413,7 @@ POST task6/_update_by_query?pipeline=pip_2
   {"cont":"铭毅好", "int_value":35}
   ```
 
-* 集群2 (10.128.190.84:9200)
-* kibana (10.128.190.84:5601)
+* 集群2 
 
 答案如下：
 
@@ -482,8 +469,7 @@ PUT task7
   {"name":"movice_003"}
   ```
 
-* 集群2 (10.128.190.84:9200)
-* kibana (10.128.190.84:5601)
+* 集群2 
 
 答案如下：
 
@@ -509,8 +495,7 @@ PUT _template/temp_1
 
 一个单节点的集群，需要开启xpack，设置elastic和kibana的密码都是password，添加一个jian的用户，fullname为Jian, email为aaa@aa.com，授权kibana_user的角色给它。
 
-* 集群3 (10.128.190.83:9200)
-* kibana (10.128.190.83:5601)
+* 集群3 
 
 答案如下：
 
@@ -528,8 +513,7 @@ bin/elasticsearch-setup-passwords interactive
 
 已有索引task10，里面有个对象类型的字段user，这个user里面还是个数组字段，分为user.first和user.last。先要求定义一个新的索引task10_new中，user字段类型为nested 类型，然后从task10 中reindex数据到task10_new中，使用nested的查询。
 
-* 集群2 (10.128.190.84:9200)
-* kibana (10.128.190.84:5601)
+* 集群2 
 
 答案如下：
 
@@ -599,8 +583,7 @@ GET task10_new/_search
 
 对movies这个索引，进行bool的should 的查询，要求title字段match  phrase匹配上 haha，并且指定返回的size数量为5，要求结果按照revence字段进行降序排列，并且高亮相应的title字段。高亮的格式是\<strong>  \</strong>。
 
-* 集群2 (10.128.190.84:9200)
-* kibana (10.128.190.84:5601)
+* 集群2 
 
 答案如下：
 
@@ -649,8 +632,8 @@ GET movies/_search
 
 这两个集群中，都有索引kibana_sample_data_flights，同时对这两个集群中的kibana_sample_data_flights索引，进行检索。
 
-* 集群2 (10.128.190.84:9200)  kibana (10.128.190.84:5601)
-* 集群1 (10.128.190.86:9200/10.128.190.87:9200/10.128.190.88:9200)   kibana (10.128.190.86:5601)
+* 集群2 
+* 集群1 
 
 答案如下：
 
@@ -720,8 +703,7 @@ A Kibana instance for cluster2 is running on port 5602. Define a new index on cl
 
 Index the document above into your new task13 index with an _id of 123.
 
-* 集群2 (10.128.190.84:9200)
-* kibana (10.128.190.84:5601)
+* 集群2 
 
 答案如下：
 
@@ -807,8 +789,7 @@ POST task13/_doc/123
 * 在title中包含“my”或者“me”。
 * 如果在tags中包含"romatic movies"，该条算分提高，如果不包含则算分不变
 
-* 集群2 (10.128.190.84:9200)
-* kibana (10.128.190.84:5601)
+* 集群2 
 
 答案如下：
 
@@ -875,8 +856,7 @@ POST movie-1/_search
 
 ingredient 这个name包含 tt，符合这个条件的top 10的供应商 manufacturer。
 
-* 集群2 (10.128.190.84:9200)
-* kibana (10.128.190.84:5601)
+* 集群2 
 
 答案如下：
 
@@ -902,8 +882,7 @@ POST task15/_search
 
 对索引task16的是三个字段a,b,c进行查询 tt，要求字段c的boost为2，各个字段的查询算法加和。
 
-* 集群2 (10.128.190.84:9200)
-* kibana (10.128.190.84:5601)
+* 集群2 
 
 答案如下：
 
@@ -930,8 +909,7 @@ POST task16/_search
 
 删除掉索引kibana_sample_data_flights，利用快照进行恢复。
 
-* 集群4 (10.128.190.82:9200)
-* kibana (10.128.190.82:5601)
+* 集群4 
 
 答案如下：
 
@@ -993,8 +971,7 @@ There is a Kibana instance configured for cluster2 that is running on port 5602.
 
 In the text field below, provide only the JSON portion of your search request.
 
-* 集群2 (10.128.190.84:9200)
-* kibana (10.128.190.84:5601)
+* 集群2 
 
 答案如下：
 
@@ -1062,8 +1039,7 @@ POST earthquakes/_search
 
 找出每个月的最大震级magnitude和深度depth。
 
-* 集群2 (10.128.190.84:9200)
-* kibana (10.128.190.84:5601)
+* 集群2 
 
 答案如下：
 
@@ -1119,8 +1095,7 @@ There is a Kibana instance configured for cluster2 that is running on port 5602.
 
 After defining the pipeline, update all of the documents in the earthquakes index, applying your pipeline to each document during the updating.
 
-* 集群2 (10.128.190.84:9200)
-* kibana (10.128.190.84:5601)
+* 集群2 
 
 答案有些问题：
 
@@ -1190,8 +1165,7 @@ There is a Kibana instance configured for cluster2 that is running on port 5602.
 
 In the text field below, provide only the JSON portion of your search request.
 
-* 集群2 (10.128.190.84:9200)
-* kibana (10.128.190.84:5601)
+* 集群2 
 
 答案如下：
 
@@ -1257,8 +1231,7 @@ POST earthquakes/_update_by_query?pipeline=earthquakes_pipeline
 
 (field_y是空格分割的一组词，比如"foo bar"，索引到task22_new后，要求变成["foo","bar"])
 
-* 集群2 (10.128.190.84:9200)
-* kibana (10.128.190.84:5601)
+* 集群2 
 
 答案如下：
 
@@ -1326,8 +1299,7 @@ POST _ingest/pipeline/pip_3/_simulate
 
 为task23设定一个index alias名字为alias2，默认查询只返回评分大于3的电影。
 
-* 集群2 (10.128.190.84:9200)
-* kibana (10.128.190.84:5601)
+* 集群2 
 
 答案如下：
 
@@ -1363,8 +1335,7 @@ POST /_aliases
 * 增加一个整形字段，将索引A中的一个字段的字符串长度，计算后写入
 * 将A文档中的字符串以";"分隔后，写入索引B中的数组字段中
 
-* 集群2 (10.128.190.84:9200)
-* kibana (10.128.190.84:5601)
+* 集群2 
 
 答案如下：
 
@@ -1432,8 +1403,7 @@ POST _reindex
 
 * bool查询，should/minimun_should_match
 
-* 集群2 (10.128.190.84:9200)
-* kibana (10.128.190.84:5601)
+* 集群2 
 
 答案如下：
 
@@ -1481,8 +1451,7 @@ POST task25/_search
 * 通过参数来调用这个search template
 * 这个search template运用到 kibana_sample_data_flights中
 * "my_field"是DestCountry，而"my_value"是CN，"size"为5.
-* 集群2 (10.128.190.84:9200)
-* kibana (10.128.190.84:5601)
+* 集群2 
 
 答案如下:
 
@@ -1530,8 +1499,7 @@ There is a Kibana instance configured for cluster2 that is running on port 5602.
 
 In the text field below, provide only the JSON portion of your search request:
 
-* 集群2 (10.128.190.84:9200)
-* kibana (10.128.190.84:5601)
+* 集群2 
 
 答案如下：
 
