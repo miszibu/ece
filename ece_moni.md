@@ -30,7 +30,7 @@ GET _cat/shards/book1
 
 PUT books1/_settings
 {
-  "index.routing.allocation.include._name": "gzbss190086",
+  "index.routing.allocation.include._name": "node1",
   "number_of_replicas": 0
 }
 
